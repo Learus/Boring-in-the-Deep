@@ -33,11 +33,6 @@ public class Player : MonoBehaviour
         // Move the player
         rb.velocity = velocity;
     }
-
-    private void OnCollisionEnter2D(Collision2D other) {
-        Debug.Log("Hi");
-    }
-
     IEnumerator CandleLight()
     {
         while (true) {

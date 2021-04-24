@@ -16,7 +16,6 @@ public class Game : MonoBehaviour
     public float moveSpeed = 5f;
     public int ActiveTemplates = 5;
 
-    private Collider2D col;
 
     private void Awake() {
         if (_instance != null && _instance != this)
@@ -31,7 +30,6 @@ public class Game : MonoBehaviour
     void Start()
     {
         InitialGenerate();
-        this.col = this.GetComponent<Collider2D>();
     }
 
     void Update()
@@ -41,10 +39,6 @@ public class Game : MonoBehaviour
 
     public void EnteredNewTemplate(string templateName)
     {
-        this.col.offset = new Vector2(this.col.offset.x, this.col.offset.y - templatesHeightDifference);
-
-        Debug.Log(templateName);
-
         try
         {
             if (int.Parse(templateName) - 2 >= 0)
@@ -81,7 +75,7 @@ public class Game : MonoBehaviour
 
             if (last.NextDependencies.Count != 0)
             {
-                randomIndex = Random.Range(0, last.NextDependencies.Count);
+                randomIndex = last.NextDependencies[Random.Range(0, last.NextDependencies.Count)];
             }
         }
         // If not, generate a template that can stand alone.
