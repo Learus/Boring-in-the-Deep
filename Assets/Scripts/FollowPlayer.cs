@@ -6,17 +6,12 @@ public class FollowPlayer : MonoBehaviour
 {
     public Transform player;
     public Vector3 offset = Vector3.zero;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
+    public float offsetSpeed = 5f;
+    
     // Update is called once per frame
     void Update()
     {
-        Vector3 position = transform.position ;
-        position.y = (player.position + offset).y;
-        transform.position = position ;
+        Vector3 target = new Vector3(transform.position.x, player.position.y, transform.position.z) + offset;
+        transform.position = Vector3.Lerp(transform.position, target, offsetSpeed * Time.deltaTime);
     }
 }

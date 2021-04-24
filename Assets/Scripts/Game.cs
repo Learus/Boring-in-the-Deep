@@ -14,6 +14,8 @@ public class Game : MonoBehaviour
 
     public float templatesHeightDifference = 10f;
     public float moveSpeed = 5f;
+    public float slowSpeed = 2.5f;
+    public float speed = 5f;
     public int ActiveTemplates = 5;
 
 
@@ -29,19 +31,22 @@ public class Game : MonoBehaviour
     }
     void Start()
     {
+        ClearGame();
         InitialGenerate();
+        speed = moveSpeed;
     }
 
     void Update()
     {
-        this.transform.Translate(new Vector3(0, 1, 0) * moveSpeed * Time.deltaTime);
+        this.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
     }
 
     public void EnteredNewTemplate(string templateName)
     {
         try
         {
-            if (int.Parse(templateName) - 2 >= 0)
+            int id = int.Parse(templateName);
+            if (id - 8 >= 0)
             {
                 Destroy(ActiveGame[0]);
                 ActiveGame.RemoveAt(0);
@@ -93,5 +98,13 @@ public class Game : MonoBehaviour
         newTemplate.name = index.ToString();
 
         ActiveGame.Add(newTemplate);
+    }
+
+    public void ClearGame()
+    {
+        foreach (Transform child in this.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 }
