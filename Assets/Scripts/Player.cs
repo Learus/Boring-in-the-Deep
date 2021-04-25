@@ -125,8 +125,6 @@ public class Player : MonoBehaviour
         {
             Speed();
         }
-
-        Debug.Log(breaking);
     }
 
     public void Break()
