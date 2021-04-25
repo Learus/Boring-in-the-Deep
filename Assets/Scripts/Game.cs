@@ -20,6 +20,8 @@ public class Game : MonoBehaviour
     public List<GameObject> RockTemplates;
     [Header("Lava")]
     public List<GameObject> LavaTemplates;
+    [Header("Void")]
+    public List<GameObject> VoidTemplates;
 
     [Header("Game")]
 
@@ -75,6 +77,7 @@ public class Game : MonoBehaviour
 
         this.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
         Manager.Instance.Beginning.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
+        Debug.Log(winning);
     }
 
     public void Play()
@@ -149,7 +152,7 @@ public class Game : MonoBehaviour
             targetPosition = new Vector3(last.transform.position.x, last.transform.position.y - templatesHeightDifference, last.transform.position.z);
 
             // THIS IS THE END
-            if (last.WinIndex == -1)
+            if (winning && last.WinIndex == -1)
             {
                 activeLayer++;
                 winning = false;

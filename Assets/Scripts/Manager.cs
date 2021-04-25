@@ -81,6 +81,13 @@ public class Manager : MonoBehaviour
         GameLight.intensity = 1;
     }
 
+    public void Lose()
+    {
+        Player.Instance.Lose();
+        Game.Instance.pause = true;
+        StartCoroutine(WaitToReset());
+    }
+
     IEnumerator DimLight()
     {
         yield return new WaitForSeconds(1f);
@@ -91,11 +98,15 @@ public class Manager : MonoBehaviour
         }
     }
 
-
-
     IEnumerator HideMenu()
     {
         Menu.gameObject.SetActive(false);
         yield break;
+    }
+
+    IEnumerator WaitToReset()
+    {
+        yield return new WaitForSeconds(3f);
+        Reset();
     }
 }

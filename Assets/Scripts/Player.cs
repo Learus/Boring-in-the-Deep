@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D rb;
     private AudioSource EngineSound;
+    public AudioSource CrashSound;
 
     public Vector3 InitialPosition = new Vector3(0, 13.85f, 1);
 
@@ -45,6 +46,7 @@ public class Player : MonoBehaviour
     public ParticleSystem Thruster;
     public float ThrusterNormalSpeed = 0.4f;
     public float ThrusterBreakSpeed = 0.15f;
+    public ParticleSystem Explosion;
 
     #endregion
 
@@ -213,6 +215,20 @@ public class Player : MonoBehaviour
             float random = Random.Range(1, 2);
             Fire.intensity = Mathf.Lerp(Fire.intensity, random, Time.deltaTime);
             yield return new WaitForSeconds(0.3f);
+        }
+    }
+
+    public void Lose()
+    {
+        CrashSound.Play();
+        Explosion.Play();
+        Pause();
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.name == "Obstacles")
+        {
+            Manager.Instance.Lose();
         }
     }
 }

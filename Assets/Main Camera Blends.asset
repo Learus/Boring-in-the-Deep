@@ -27,7 +27,7 @@ MonoBehaviour:
   - m_From: Game Camera
     m_To: Beginning Camera
     m_Blend:
-      m_Style: 0
+      m_Style: 3
       m_Time: 2
       m_CustomCurve:
         serializedVersion: 2
