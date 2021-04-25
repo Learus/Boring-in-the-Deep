@@ -8,8 +8,6 @@ public class Game : MonoBehaviour
     private static Game _instance;
     public static Game Instance { get { return _instance; }}
 
-
-
     public List<GameObject> ActiveGame;
 
     [Header("Dirt")]
@@ -40,6 +38,9 @@ public class Game : MonoBehaviour
     public int levelsPerLayer = 20;
     public int currentGeneratedLevel;
 
+    public bool playing = false;
+    public bool pause = false;
+
 
     private void Awake() {
         if (_instance != null && _instance != this)
@@ -51,6 +52,7 @@ public class Game : MonoBehaviour
             _instance = this;
         }
     }
+
     void Start()
     {
         Dictionary<string, List<GameObject>> dirt = new Dictionary<string, List<GameObject>>();
@@ -73,18 +75,28 @@ public class Game : MonoBehaviour
         Templates.Add(rock);
         Templates.Add(lava);
 
+        playing = false;
+        pause = false;
+    }
+
+    void Update()
+    {
+        if (!playing || pause) return;
+
+        this.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
+        Manager.Instance.Beginning.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
+    }
+
+    public void Play()
+    {
+        playing = true;
+
         activeLayer = 0;
         currentGeneratedLevel = 0;
 
         ClearGame();
         InitialGenerate();
         speed = moveSpeed;
-    }
-
-    void Update()
-    {
-        this.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
-        Manager.Instance.Beginning.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
     }
 
     public void EnteredNewTemplate(TilemapTemplate template)

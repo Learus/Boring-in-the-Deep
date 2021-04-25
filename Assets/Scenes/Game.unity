@@ -669,6 +669,11 @@ MonoBehaviour:
   pitchOffset: 0.02
   Fire: {fileID: 888020790}
   Dust: {fileID: 804768349}
+  DustNormalSpeed: 1
+  DustBreakSpeed: 0.5
+  Thruster: {fileID: 682670183}
+  ThrusterNormalSpeed: 0.4
+  ThrusterBreakSpeed: 0.15
 --- !u!212 &317106242
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -817,7 +822,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a6139dce32323954796656ab0b75143f, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -1320,7 +1325,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.2
+      scalar: 0.4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -16964,6 +16969,8 @@ MonoBehaviour:
   activeLayer: 0
   levelsPerLayer: 20
   currentGeneratedLevel: 0
+  playing: 0
+  pause: 0
 --- !u!1 &1790276165
 GameObject:
   m_ObjectHideFlags: 0
@@ -16981,7 +16988,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1790276166
 MonoBehaviour:
   m_ObjectHideFlags: 0
