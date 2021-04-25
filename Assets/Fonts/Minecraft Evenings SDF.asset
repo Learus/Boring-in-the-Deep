@@ -2081,7 +2081,7 @@ Material:
     - _TextureHeight: 512
     - _TextureWidth: 512
     - _UnderlayDilate: 0.082
-    - _UnderlayOffsetX: 0.647
+    - _UnderlayOffsetX: 0.758
     - _UnderlayOffsetY: -0.985
     - _UnderlaySoftness: 0
     - _VertexOffsetX: 0
@@ -2092,13 +2092,13 @@ Material:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 0.6603774, g: 0.100441925, b: 0.052954797, a: 1}
+    - _GlowColor: {r: 0.2831488, g: 0.21586053, b: 0.18447503, a: 1}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5019608}
+    - _UnderlayColor: {r: 0.13563336, g: 0.086500466, b: 0.07227186, a: 1}
   m_BuildTextureStacks: []
 --- !u!28 &8510261697820735923
 Texture2D:
