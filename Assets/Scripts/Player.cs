@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private AudioSource EngineSound;
 
+    public Vector3 InitialPosition = new Vector3(0, 13.85f, 1);
+
     [Header("Rotation Speed")]
     public float normalRotationSpeed = 5f;
     public float slowRotationSpeed = 2.5f;
@@ -74,6 +76,24 @@ public class Player : MonoBehaviour
 
         Dust.Stop();
         Thruster.Stop();
+        this.transform.position = InitialPosition;
+    }
+
+    public void Reset()
+    {
+        sideSpeed = normalSideSpeed;
+        rotationSpeed = normalRotationSpeed;
+
+        EngineSound.Stop();
+        rb.velocity = Vector2.zero;
+
+        Dust.Stop();
+        Thruster.Stop();
+
+        animator.SetBool("Playing", false);
+
+        this.transform.position = InitialPosition;
+        this.transform.rotation = new Quaternion(0, 0, 0, 0);
     }
 
 

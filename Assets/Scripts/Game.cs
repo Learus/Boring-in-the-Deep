@@ -8,7 +8,11 @@ public class Game : MonoBehaviour
     private static Game _instance;
     public static Game Instance { get { return _instance; }}
 
+    #region Variables
+
     public List<GameObject> ActiveGame;
+
+    public Vector3 InitialPosition = new Vector3(0, 0, -1);
 
     [Header("Dirt")]
     public List<GameObject> DirtTemplates;
@@ -41,6 +45,7 @@ public class Game : MonoBehaviour
     public bool playing = false;
     public bool pause = false;
 
+    #endregion
 
     private void Awake() {
         if (_instance != null && _instance != this)
@@ -97,6 +102,15 @@ public class Game : MonoBehaviour
         ClearGame();
         InitialGenerate();
         speed = moveSpeed;
+    }
+
+    public void Reset()
+    {
+        playing = false;
+        pause = false;
+        ClearGame();
+
+        this.transform.position = InitialPosition;
     }
 
     public void EnteredNewTemplate(TilemapTemplate template)

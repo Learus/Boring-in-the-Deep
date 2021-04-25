@@ -14,6 +14,7 @@ public class Manager : MonoBehaviour
     public Cinemachine.CinemachineVirtualCamera MenuCamera;
     public Canvas Menu;
     public GameObject Beginning;
+    public Vector3 BeginningInitialPosition = new Vector3(0, 14, 0);
 
     private void Awake() {
         if (_instance != null && _instance != this)
@@ -52,6 +53,7 @@ public class Manager : MonoBehaviour
                 Player.Instance.Play();
             }
         }
+        if (Input.GetKeyUp(KeyCode.Space)) Reset();
     }
 
     public void Play()
@@ -68,7 +70,14 @@ public class Manager : MonoBehaviour
 
     public void Reset()
     {
-        
+        GameCamera.gameObject.SetActive(false);
+        MenuCamera.gameObject.SetActive(true);
+        Menu.gameObject.SetActive(true);
+        Game.Instance.Reset();
+        Player.Instance.Reset();
+
+        Beginning.transform.position = BeginningInitialPosition;
+        GameLight.intensity = 1;
     }
 
     IEnumerator DimLight()
@@ -80,6 +89,8 @@ public class Manager : MonoBehaviour
             yield return null;
         }
     }
+
+
 
     IEnumerator HideMenu()
     {
