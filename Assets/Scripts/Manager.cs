@@ -66,6 +66,11 @@ public class Manager : MonoBehaviour
         Player.Instance.Play();
     }
 
+    public void Reset()
+    {
+        
+    }
+
     IEnumerator DimLight()
     {
         yield return new WaitForSeconds(1f);
