@@ -223,8 +223,8 @@ MonoBehaviour:
   breakCameraOffset: {x: 0, y: -2, z: 0}
   followPLayerCamera: {fileID: 1454921592}
   initialEnginePitch: 1
-  breakEnginePitch: 0.6
-  pitchOffset: 0.05
+  breakEnginePitch: 0.7
+  pitchOffset: 0.02
   Fire: {fileID: 888020790}
   Dust: {fileID: 804768349}
 --- !u!212 &317106242
@@ -12567,16 +12567,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 767220c855fb1bd428e3024a74defd4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Background: {fileID: 0}
-  Templates:
+  ActiveGame: []
+  DirtTemplates:
   - {fileID: 2249016951661525493, guid: 5efe435da4c435e4cb132a147026867c, type: 3}
   - {fileID: 2249016951661525493, guid: 1a4b73005528f5e498a636a6fe76ae21, type: 3}
-  ActiveGame: []
-  templatesHeightDifference: 10
+  DirtTransition: []
+  DirtBoss: []
+  RockTemplates: []
+  RockTransition: []
+  RockBoss: []
+  LavaTemplates: []
+  LavaTransition: []
+  LavaBoss: []
   moveSpeed: 4
   slowSpeed: 1.5
   speed: 4
   ActiveTemplates: 5
+  templatesHeightDifference: 10
+  activeLayer: 0
+  levelsPerLayer: 20
+  currentGeneratedLevel: 0
 --- !u!1 &1844469650
 GameObject:
   m_ObjectHideFlags: 0

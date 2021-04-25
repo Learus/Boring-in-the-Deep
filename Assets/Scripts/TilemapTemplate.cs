@@ -6,11 +6,18 @@ public class TilemapTemplate : MonoBehaviour
 {
     public List<int> PrevDependencies;
     public List<int> NextDependencies;
+    public enum TemplateType
+    {
+        Normal,
+        Transition,
+        Boss
+    };
+    public TemplateType type;
 
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.name == "Player")
         {
-            Game.Instance.EnteredNewTemplate(name);
+            Game.Instance.EnteredNewTemplate(this);
         }
     }
 }

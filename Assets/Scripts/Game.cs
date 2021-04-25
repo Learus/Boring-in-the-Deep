@@ -2,21 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Game : MonoBehaviour
 {
     private static Game _instance;
     public static Game Instance { get { return _instance; }}
 
-    public Transform Background;
 
-    public List<GameObject> Templates;
+
     public List<GameObject> ActiveGame;
 
-    public float templatesHeightDifference = 10f;
+    [Header("Dirt")]
+    public List<GameObject> DirtTemplates;
+    public List<GameObject> DirtTransition;
+    public List<GameObject> DirtBoss;
+    [Header("Rock")]
+    public List<GameObject> RockTemplates;
+    public List<GameObject> RockTransition;
+    public List<GameObject> RockBoss;
+    [Header("Lava")]
+    public List<GameObject> LavaTemplates;
+    public List<GameObject> LavaTransition;
+    public List<GameObject> LavaBoss;
+
+    [Header("Game")]
+
     public float moveSpeed = 5f;
     public float slowSpeed = 2.5f;
     public float speed = 5f;
+
+    [Header("Generation - Optimization")]
     public int ActiveTemplates = 5;
+    public float templatesHeightDifference = 10f;
+    public int activeLayer;
+    public List<Dictionary<string, List<GameObject>>> Templates;
+
+    public int levelsPerLayer = 20;
+    public int currentGeneratedLevel;
 
 
     private void Awake() {
@@ -31,6 +53,29 @@ public class Game : MonoBehaviour
     }
     void Start()
     {
+        Dictionary<string, List<GameObject>> dirt = new Dictionary<string, List<GameObject>>();
+        dirt["Templates"] = DirtTemplates;
+        dirt["Transition"] = DirtTransition;
+        dirt["Boss"] = DirtBoss;
+
+        Dictionary<string, List<GameObject>> rock = new Dictionary<string, List<GameObject>>();
+        rock["Templates"] = RockTemplates;
+        rock["Transition"] = RockTransition;
+        rock["Boss"] = RockBoss;
+
+        Dictionary<string, List<GameObject>> lava = new Dictionary<string, List<GameObject>>();
+        lava["Templates"] = LavaTemplates;
+        lava["Transition"] = LavaTransition;
+        lava["Boss"] = LavaBoss;
+
+        Templates = new List<Dictionary<string, List<GameObject>>>();
+        Templates.Add(dirt);
+        Templates.Add(rock);
+        Templates.Add(lava);
+
+        activeLayer = 0;
+        currentGeneratedLevel = 0;
+
         ClearGame();
         InitialGenerate();
         speed = moveSpeed;
@@ -41,11 +86,11 @@ public class Game : MonoBehaviour
         this.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
     }
 
-    public void EnteredNewTemplate(string templateName)
+    public void EnteredNewTemplate(TilemapTemplate template)
     {
         try
         {
-            int id = int.Parse(templateName);
+            int id = int.Parse(template.name);
             if (id - 8 >= 0)
             {
                 Destroy(ActiveGame[0]);
@@ -53,7 +98,20 @@ public class Game : MonoBehaviour
             }
         }
         catch (System.Exception) {}
-        
+
+        if (currentGeneratedLevel >= levelsPerLayer)
+        {
+            GenerateBoss();
+            currentGeneratedLevel = 0;
+            activeLayer++;
+            return;
+        }
+
+        if (template.type != TilemapTemplate.TemplateType.Boss && template.type != TilemapTemplate.TemplateType.Transition)
+        {
+            currentGeneratedLevel++;
+        }
+
         Generate(ActiveGame.Count);
     }
 
@@ -64,11 +122,14 @@ public class Game : MonoBehaviour
         for (int i = 0; i < ActiveTemplates; i++)
         {
             Generate(i);
+            currentGeneratedLevel++;
         }
     }
 
     public void Generate(int index = 0)
     {
+        List<GameObject> TemplateList = Templates[activeLayer]["Templates"];
+
         TilemapTemplate last = ActiveGame.Count != 0 ? ActiveGame[ActiveGame.Count - 1].GetComponent<TilemapTemplate>() : null;
 
         Vector3 targetPosition = Vector3.zero;
@@ -86,11 +147,11 @@ public class Game : MonoBehaviour
         // If not, generate a template that can stand alone.
         else
         {
-            randomIndex = Random.Range(0, Templates.FindAll(template => template.GetComponent<TilemapTemplate>().PrevDependencies.Count == 0).Count);
+            randomIndex = Random.Range(0, TemplateList.FindAll(template => template.GetComponent<TilemapTemplate>().PrevDependencies.Count == 0).Count);
         }
 
         GameObject newTemplate = Instantiate(
-            Templates[randomIndex],
+            TemplateList[randomIndex],
             targetPosition,
             Quaternion.identity,
             this.transform
@@ -98,6 +159,17 @@ public class Game : MonoBehaviour
         newTemplate.name = index.ToString();
 
         ActiveGame.Add(newTemplate);
+    }
+
+    public void GenerateTransition()
+    {
+
+    }
+
+    public void GenerateBoss()
+    {
+        // Among other things
+        GenerateTransition();
     }
 
     public void ClearGame()
