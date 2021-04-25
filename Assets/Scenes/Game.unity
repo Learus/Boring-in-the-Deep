@@ -18047,7 +18047,12 @@ MonoBehaviour:
   - {fileID: 8264025061792741985, guid: 11e57b89ebd6e754b99ff0e509b8d4b7, type: 3}
   - {fileID: 2917967396196394278, guid: fdebaf9ca171a424784305de5aba7832, type: 3}
   - {fileID: 3708862441887784572, guid: 180c612f18876614fb9970f1d56348b9, type: 3}
-  - {fileID: 4684831202974552007, guid: fe58539612b621842a68eaf4327af475, type: 3}
+  - {fileID: 5442710640776350579, guid: fe58539612b621842a68eaf4327af475, type: 3}
+  - {fileID: 1482618663793604612, guid: 9fc4d31e8f4cd334794e5b52fb917d69, type: 3}
+  - {fileID: 1667021848990062032, guid: 1e2195b14fb551c4084b6d05c2b1bdb7, type: 3}
+  - {fileID: 5722745615034596205, guid: 2c2dcb554fc43e14dbd2e888f903fe37, type: 3}
+  - {fileID: 1405263736013622627, guid: 5e60daa8a954c3b49b0fb2f0e4e4a492, type: 3}
+  - {fileID: 5920978218407872529, guid: fb4e176f75134544b838fe64259a734d, type: 3}
   RockTransition: []
   RockBoss: []
   LavaTemplates: []
