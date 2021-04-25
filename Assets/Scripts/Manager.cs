@@ -4,30 +4,37 @@ using UnityEngine;
 
 public class Manager : MonoBehaviour
 {
-    public Camera GameCamera;
+    private static Manager _instance;
+    public static Manager Instance { get { return _instance; }}
+
+    public Cinemachine.CinemachineVirtualCamera GameCamera;
     public GameObject GameLight;
-    public Camera MenuCamera;
+    public Cinemachine.CinemachineVirtualCamera MenuCamera;
     public Canvas Menu;
+    public GameObject Beginning;
+
+    private void Awake() {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        GameCamera.gameObject.SetActive(false);
-        GameLight.SetActive(false);
-
-
-        MenuCamera.gameObject.SetActive(true);
-
+        Play();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Play()
     {
-        
-    }
-
-    void StartGame()
-    {
-
+        GameCamera.gameObject.SetActive(true);
+        MenuCamera.gameObject.SetActive(false);
+        Menu.gameObject.SetActive(false);
     }
 
     IEnumerator HideMenu()

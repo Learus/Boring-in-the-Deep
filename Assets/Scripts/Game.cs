@@ -84,10 +84,12 @@ public class Game : MonoBehaviour
     void Update()
     {
         this.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
+        Manager.Instance.Beginning.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
     }
 
     public void EnteredNewTemplate(TilemapTemplate template)
     {
+    
         try
         {
             int id = int.Parse(template.name);
@@ -95,6 +97,7 @@ public class Game : MonoBehaviour
             {
                 Destroy(ActiveGame[0]);
                 ActiveGame.RemoveAt(0);
+                Manager.Instance.Beginning.SetActive(false);
             }
         }
         catch (System.Exception) {}
