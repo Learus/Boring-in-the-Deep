@@ -3581,7 +3581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2678483983dc6e74fb3784a7760528a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PrevDependencies: 
+  PrevDependencies: 09000000
   NextDependencies: 01000000
   type: 0
 --- !u!61 &7122308510885906312

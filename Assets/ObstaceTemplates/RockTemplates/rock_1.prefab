@@ -3581,8 +3581,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2678483983dc6e74fb3784a7760528a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PrevDependencies: 00000000
-  NextDependencies: 
+  PrevDependencies: 0000000008000000
+  NextDependencies: 0400000005000000
   type: 0
 --- !u!61 &7499147445552776222
 BoxCollider2D:
