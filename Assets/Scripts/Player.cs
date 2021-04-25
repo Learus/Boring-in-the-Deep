@@ -5,8 +5,15 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class Player : MonoBehaviour
 {
-    private Vector3 mousePosition;
+    private static Player _instance;
+    public static Player Instance { get { return _instance; }}
 
+    #region Variables
+    private Vector3 mousePosition;
+    private Animator animator;
+
+    private Rigidbody2D rb;
+    private AudioSource EngineSound;
 
     [Header("Rotation Speed")]
     public float normalRotationSpeed = 5f;
@@ -26,11 +33,30 @@ public class Player : MonoBehaviour
     public float pitchOffset = 0.05f;
     private Task pitchCoroutine;
     private bool breaking;
-    private Rigidbody2D rb;
-    private AudioSource EngineSound;
 
     public Light2D Fire;
+
+    [Header("Particle Settings")]
     public ParticleSystem Dust;
+    public float DustNormalSpeed = 1f;
+    public float DustBreakSpeed = 0.5f;
+    public ParticleSystem Thruster;
+    public float ThrusterNormalSpeed = 0.4f;
+    public float ThrusterBreakSpeed = 0.15f;
+
+    #endregion
+
+    private void Awake() {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,14 +65,41 @@ public class Player : MonoBehaviour
         sideSpeed = normalSideSpeed;
         rotationSpeed = normalRotationSpeed;
         EngineSound = this.GetComponent<AudioSource>();
+        animator = this.GetComponent<Animator>();
 
         EngineSound.pitch = initialEnginePitch;
         pitchCoroutine = null;
+
+        rb.velocity = Vector2.zero;
+
+        Dust.Stop();
+        Thruster.Stop();
+    }
+
+
+    public void Play()
+    {
+        EngineSound.Play();
+        Dust.Play();
+        Thruster.Play();
+        animator.SetBool("Playing", true);
+    }
+
+    public void Pause()
+    {
+        EngineSound.Stop();
+        Dust.Stop();
+        Thruster.Stop();
+        animator.SetBool("Playing", false);
+
+        rb.velocity = Vector2.zero;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!Game.Instance.playing || Game.Instance.pause) return;
+
         // Figure out new position
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePosition - transform.position).normalized;
@@ -62,8 +115,7 @@ public class Player : MonoBehaviour
         // Move the player
         rb.velocity = velocity;
 
-
-        CreateDust();
+        Dust.Play();
 
         if (Input.GetMouseButton(0))
         {
@@ -73,39 +125,46 @@ public class Player : MonoBehaviour
         {
             Speed();
         }
+
+        Debug.Log(breaking);
     }
 
     public void Break()
     {
+        animator.SetBool("Break", true);
         followPLayerCamera.offset = breakCameraOffset;
         sideSpeed = slowSideSpeed;
         rotationSpeed = slowRotationSpeed;
         Game.Instance.speed = Game.Instance.slowSpeed;
 
-        // Debug.Log(pitchCoroutine.Running);
+        if (pitchCoroutine!= null && !breaking) pitchCoroutine.Stop();
+        
+        pitchCoroutine = new Task(PitchEngine());
+        breaking = true;
 
-        // if (pitchCoroutine == null || !pitchCoroutine.Running)
-        // {
-            pitchCoroutine = new Task(PitchEngine());
-        // }
+        var pm = Thruster.main;
+        pm.startLifetime = ThrusterBreakSpeed;
+        pm = Dust.main;
+        pm.startLifetime = DustBreakSpeed;
     }
 
     public void Speed()
     {
+        animator.SetBool("Break", false);
         followPLayerCamera.offset = Vector3.zero;
         sideSpeed = normalSideSpeed;
         rotationSpeed = normalRotationSpeed;
         Game.Instance.speed = Game.Instance.moveSpeed;
 
-        // if (pitchCoroutine == null || !pitchCoroutine.Running)
-        // {
-            pitchCoroutine = new Task(PitchEngine(false));
-        // }
-    }
+        if (pitchCoroutine!= null && breaking) pitchCoroutine.Stop();
+        
+        pitchCoroutine = new Task(PitchEngine(false));
+        breaking = false;
 
-    public void CreateDust()
-    {
-        Dust.Play();
+        var pm = Thruster.main;
+        pm.startLifetime = ThrusterNormalSpeed;
+        pm = Dust.main;
+        pm.startLifetime = DustNormalSpeed;
     }
 
     IEnumerator PitchEngine(bool down = true)
