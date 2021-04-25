@@ -656,14 +656,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f69067447f86832448f686d12fa37235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalRotationSpeed: 4
-  slowRotationSpeed: 2
-  rotationSpeed: 4
-  normalSideSpeed: 6
-  slowSideSpeed: 3
-  sideSpeed: 6
+  normalRotationSpeed: 8
+  slowRotationSpeed: 8
+  rotationSpeed: 8
+  normalSideSpeed: 8
+  slowSideSpeed: 4
+  sideSpeed: 8
   breakCameraOffset: {x: 0, y: -2, z: 0}
-  followPLayerCamera: {fileID: 1454921592}
+  followPLayerCamera: {fileID: 1790276168}
   initialEnginePitch: 1
   breakEnginePitch: 0.7
   pitchOffset: 0.02
@@ -932,7 +932,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameCamera: {fileID: 1790276166}
-  GameLight: {fileID: 0}
+  GameLight: {fileID: 1919323372}
+  GameLightIntensity: 0.24
   MenuCamera: {fileID: 2120111448}
   Menu: {fileID: 1070026897}
   Beginning: {fileID: 2113417426}
@@ -16983,6 +16984,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1790276167}
   - component: {fileID: 1790276166}
+  - component: {fileID: 1790276168}
   m_Layer: 0
   m_Name: Game Camera
   m_TagString: Untagged
@@ -17033,13 +17035,28 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1790276165}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 13.87, z: -54.808388}
+  m_LocalPosition: {x: 0, y: 13.85, z: -11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 403361664}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1790276168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790276165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01fc8330a8bc76c4594ba1df7c6ac29b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 317106243}
+  offset: {x: 0, y: 0, z: 0}
+  offsetSpeed: 3
 --- !u!1 &1795228703
 GameObject:
   m_ObjectHideFlags: 0

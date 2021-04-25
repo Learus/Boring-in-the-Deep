@@ -89,7 +89,6 @@ public class Game : MonoBehaviour
 
     public void EnteredNewTemplate(TilemapTemplate template)
     {
-    
         try
         {
             int id = int.Parse(template.name);

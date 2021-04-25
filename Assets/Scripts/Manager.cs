@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class Manager : MonoBehaviour
 {
@@ -8,7 +9,8 @@ public class Manager : MonoBehaviour
     public static Manager Instance { get { return _instance; }}
 
     public Cinemachine.CinemachineVirtualCamera GameCamera;
-    public GameObject GameLight;
+    public Light2D GameLight;
+    public float GameLightIntensity = 0.24f;
     public Cinemachine.CinemachineVirtualCamera MenuCamera;
     public Canvas Menu;
     public GameObject Beginning;
@@ -34,11 +36,25 @@ public class Manager : MonoBehaviour
     {
         GameCamera.gameObject.SetActive(true);
         MenuCamera.gameObject.SetActive(false);
-        Menu.gameObject.SetActive(false);
+
+        StartCoroutine(HideMenu());
+        StartCoroutine(DimLight());
+        
+    }
+
+    IEnumerator DimLight()
+    {
+        yield return new WaitForSeconds(1f);
+        for (float i = 1; i >= GameLightIntensity; i -= 0.01f)
+        {
+            GameLight.intensity = i;
+            yield return null;
+        }
     }
 
     IEnumerator HideMenu()
     {
+        Menu.gameObject.SetActive(false);
         yield break;
     }
 }
