@@ -6,7 +6,7 @@ using UnityEngine.Experimental.Rendering.Universal;
 public class Player : MonoBehaviour
 {
     private Vector3 mousePosition;
-    public FollowPlayer followPLayerCamera;
+
 
     [Header("Rotation Speed")]
     public float normalRotationSpeed = 5f;
@@ -20,7 +20,14 @@ public class Player : MonoBehaviour
 
     [Header("Break Stuff")]
     public Vector3 breakCameraOffset;
+    public FollowPlayer followPLayerCamera;
+    public float initialEnginePitch = 1f;
+    public float breakEnginePitch = 0.6f;
+    public float pitchOffset = 0.05f;
+    private Task pitchCoroutine;
+    private bool breaking;
     private Rigidbody2D rb;
+    private AudioSource EngineSound;
 
     public Light2D Fire;
     public ParticleSystem Dust;
@@ -31,6 +38,10 @@ public class Player : MonoBehaviour
         StartCoroutine(CandleLight());
         sideSpeed = normalSideSpeed;
         rotationSpeed = normalRotationSpeed;
+        EngineSound = this.GetComponent<AudioSource>();
+
+        EngineSound.pitch = initialEnginePitch;
+        pitchCoroutine = null;
     }
 
     // Update is called once per frame
@@ -51,12 +62,16 @@ public class Player : MonoBehaviour
         // Move the player
         rb.velocity = velocity;
 
-        Speed();
+
         CreateDust();
 
         if (Input.GetMouseButton(0))
         {
             Break();
+        }
+        else
+        {
+            Speed();
         }
     }
 
@@ -66,6 +81,13 @@ public class Player : MonoBehaviour
         sideSpeed = slowSideSpeed;
         rotationSpeed = slowRotationSpeed;
         Game.Instance.speed = Game.Instance.slowSpeed;
+
+        // Debug.Log(pitchCoroutine.Running);
+
+        // if (pitchCoroutine == null || !pitchCoroutine.Running)
+        // {
+            pitchCoroutine = new Task(PitchEngine());
+        // }
     }
 
     public void Speed()
@@ -74,11 +96,38 @@ public class Player : MonoBehaviour
         sideSpeed = normalSideSpeed;
         rotationSpeed = normalRotationSpeed;
         Game.Instance.speed = Game.Instance.moveSpeed;
+
+        // if (pitchCoroutine == null || !pitchCoroutine.Running)
+        // {
+            pitchCoroutine = new Task(PitchEngine(false));
+        // }
     }
 
     public void CreateDust()
     {
         Dust.Play();
+    }
+
+    IEnumerator PitchEngine(bool down = true)
+    {
+        if (down)
+        {
+            for (float i = EngineSound.pitch; i >= breakEnginePitch; i -= pitchOffset)
+            {
+                EngineSound.pitch = i;
+                yield return null;
+            }
+            EngineSound.pitch = breakEnginePitch;
+        }
+        else
+        {
+            for (float i = EngineSound.pitch; i <= initialEnginePitch; i += pitchOffset)
+            {
+                EngineSound.pitch = i;
+                yield return null;
+            }
+            EngineSound.pitch = initialEnginePitch;
+        }
     }
 
     IEnumerator CandleLight()
