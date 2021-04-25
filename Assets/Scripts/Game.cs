@@ -16,16 +16,10 @@ public class Game : MonoBehaviour
 
     [Header("Dirt")]
     public List<GameObject> DirtTemplates;
-    public List<GameObject> DirtTransition;
-    public List<GameObject> DirtBoss;
     [Header("Rock")]
     public List<GameObject> RockTemplates;
-    public List<GameObject> RockTransition;
-    public List<GameObject> RockBoss;
     [Header("Lava")]
     public List<GameObject> LavaTemplates;
-    public List<GameObject> LavaTransition;
-    public List<GameObject> LavaBoss;
 
     [Header("Game")]
 
@@ -37,13 +31,17 @@ public class Game : MonoBehaviour
     public int ActiveTemplates = 5;
     public float templatesHeightDifference = 10f;
     public int activeLayer;
-    public List<Dictionary<string, List<GameObject>>> Templates;
+    public List<List<GameObject>> Templates;
 
     public int levelsPerLayer = 20;
     public int currentGeneratedLevel;
+    public int playerIsInLevel = 0;
 
     public bool playing = false;
     public bool pause = false;
+
+    public bool winning = false;
+    public bool transitioning = false;
 
     #endregion
 
@@ -60,28 +58,15 @@ public class Game : MonoBehaviour
 
     void Start()
     {
-        Dictionary<string, List<GameObject>> dirt = new Dictionary<string, List<GameObject>>();
-        dirt["Templates"] = DirtTemplates;
-        dirt["Transition"] = DirtTransition;
-        dirt["Boss"] = DirtBoss;
-
-        Dictionary<string, List<GameObject>> rock = new Dictionary<string, List<GameObject>>();
-        rock["Templates"] = RockTemplates;
-        rock["Transition"] = RockTransition;
-        rock["Boss"] = RockBoss;
-
-        Dictionary<string, List<GameObject>> lava = new Dictionary<string, List<GameObject>>();
-        lava["Templates"] = LavaTemplates;
-        lava["Transition"] = LavaTransition;
-        lava["Boss"] = LavaBoss;
-
-        Templates = new List<Dictionary<string, List<GameObject>>>();
-        Templates.Add(dirt);
-        Templates.Add(rock);
-        Templates.Add(lava);
+        Templates = new List<List<GameObject>>();
+        Templates.Add(DirtTemplates);
+        Templates.Add(RockTemplates);
+        Templates.Add(LavaTemplates);
 
         playing = false;
         pause = false;
+        winning = false;
+        transitioning = false;
     }
 
     void Update()
@@ -98,6 +83,7 @@ public class Game : MonoBehaviour
 
         activeLayer = 0;
         currentGeneratedLevel = 0;
+        playerIsInLevel = -1;
 
         ClearGame();
         InitialGenerate();
@@ -108,6 +94,8 @@ public class Game : MonoBehaviour
     {
         playing = false;
         pause = false;
+        winning = false;
+        transitioning = false;
         ClearGame();
 
         this.transform.position = InitialPosition;
@@ -115,30 +103,22 @@ public class Game : MonoBehaviour
 
     public void EnteredNewTemplate(TilemapTemplate template)
     {
-        try
+        playerIsInLevel++;
+
+        if (playerIsInLevel > 2)
         {
-            int id = int.Parse(template.name);
-            if (id - 8 >= 0)
-            {
-                Destroy(ActiveGame[0]);
-                ActiveGame.RemoveAt(0);
-                Manager.Instance.Beginning.SetActive(false);
-            }
+            Destroy(ActiveGame[0]);
+            ActiveGame.RemoveAt(0);
+            Manager.Instance.Beginning.SetActive(false);
         }
-        catch (System.Exception) {}
 
         if (currentGeneratedLevel >= levelsPerLayer)
         {
-            GenerateBoss();
+            winning = true;
             currentGeneratedLevel = 0;
-            activeLayer++;
             return;
         }
-
-        if (template.type != TilemapTemplate.TemplateType.Boss && template.type != TilemapTemplate.TemplateType.Transition)
-        {
-            currentGeneratedLevel++;
-        }
+        currentGeneratedLevel++;
 
         Generate(ActiveGame.Count);
     }
@@ -156,18 +136,32 @@ public class Game : MonoBehaviour
 
     public void Generate(int index = 0)
     {
-        List<GameObject> TemplateList = Templates[activeLayer]["Templates"];
+        List<GameObject> TemplateList = Templates[activeLayer];
 
         TilemapTemplate last = ActiveGame.Count != 0 ? ActiveGame[ActiveGame.Count - 1].GetComponent<TilemapTemplate>() : null;
 
         Vector3 targetPosition = Vector3.zero;
         int randomIndex = 0;
+
         // If we can, generate a template that comes next from our tile.
         if (last != null)
         {
             targetPosition = new Vector3(last.transform.position.x, last.transform.position.y - templatesHeightDifference, last.transform.position.z);
 
-            if (last.NextDependencies.Count != 0)
+            // THIS IS THE END
+            if (last.WinIndex == -1)
+            {
+                activeLayer++;
+                winning = false;
+                currentGeneratedLevel = 0;
+                TemplateList = Templates[activeLayer];
+            }
+
+            if (winning)
+            {
+                randomIndex = last.WinIndex;
+            }
+            else if (last.NextDependencies.Count != 0)
             {
                 randomIndex = last.NextDependencies[Random.Range(0, last.NextDependencies.Count)];
             }
@@ -178,26 +172,17 @@ public class Game : MonoBehaviour
             randomIndex = Random.Range(0, TemplateList.FindAll(template => template.GetComponent<TilemapTemplate>().PrevDependencies.Count == 0).Count);
         }
 
+        GameObject toSpawn = TemplateList[randomIndex];
+
         GameObject newTemplate = Instantiate(
-            TemplateList[randomIndex],
+            toSpawn,
             targetPosition,
             Quaternion.identity,
             this.transform
         );
-        newTemplate.name = index.ToString();
+        newTemplate.name = TemplateList[randomIndex].name;
 
         ActiveGame.Add(newTemplate);
-    }
-
-    public void GenerateTransition()
-    {
-
-    }
-
-    public void GenerateBoss()
-    {
-        // Among other things
-        GenerateTransition();
     }
 
     public void ClearGame()

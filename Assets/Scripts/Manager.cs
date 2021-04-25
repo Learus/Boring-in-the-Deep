@@ -72,6 +72,7 @@ public class Manager : MonoBehaviour
     {
         GameCamera.gameObject.SetActive(false);
         MenuCamera.gameObject.SetActive(true);
+        Beginning.SetActive(true);
         Menu.gameObject.SetActive(true);
         Game.Instance.Reset();
         Player.Instance.Reset();

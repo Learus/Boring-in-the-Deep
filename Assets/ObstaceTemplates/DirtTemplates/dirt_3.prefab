@@ -1795,6 +1795,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PrevDependencies: 0100000008000000
   NextDependencies: 0600000000000000
+  WinIndex: 6
   type: 0
 --- !u!61 &3300343750250219826
 BoxCollider2D:
