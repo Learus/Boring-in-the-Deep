@@ -6,7 +6,7 @@ using UnityEngine.Experimental.Rendering.Universal;
 public class Player : MonoBehaviour
 {
     private Vector3 mousePosition;
-
+    private Animator animator;
 
     [Header("Rotation Speed")]
     public float normalRotationSpeed = 5f;
@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
         sideSpeed = normalSideSpeed;
         rotationSpeed = normalRotationSpeed;
         EngineSound = this.GetComponent<AudioSource>();
+        animator = this.GetComponent<Animator>();
 
         EngineSound.pitch = initialEnginePitch;
         pitchCoroutine = null;
@@ -77,30 +78,24 @@ public class Player : MonoBehaviour
 
     public void Break()
     {
+        animator.SetBool("Break", true);
         followPLayerCamera.offset = breakCameraOffset;
         sideSpeed = slowSideSpeed;
         rotationSpeed = slowRotationSpeed;
         Game.Instance.speed = Game.Instance.slowSpeed;
 
-        // Debug.Log(pitchCoroutine.Running);
-
-        // if (pitchCoroutine == null || !pitchCoroutine.Running)
-        // {
-            pitchCoroutine = new Task(PitchEngine());
-        // }
+        pitchCoroutine = new Task(PitchEngine());
     }
 
     public void Speed()
     {
+        animator.SetBool("Break", false);
         followPLayerCamera.offset = Vector3.zero;
         sideSpeed = normalSideSpeed;
         rotationSpeed = normalRotationSpeed;
         Game.Instance.speed = Game.Instance.moveSpeed;
 
-        // if (pitchCoroutine == null || !pitchCoroutine.Running)
-        // {
-            pitchCoroutine = new Task(PitchEngine(false));
-        // }
+        pitchCoroutine = new Task(PitchEngine(false));
     }
 
     public void CreateDust()
