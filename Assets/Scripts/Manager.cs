@@ -29,7 +29,29 @@ public class Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Play();
+        GameCamera.gameObject.SetActive(false);
+        MenuCamera.gameObject.SetActive(true);
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            if (!Game.Instance.playing) Play();
+        }
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (!Game.Instance.pause)
+            {
+                Game.Instance.pause = true;
+                Player.Instance.Pause();
+            }
+            else
+            {
+                Game.Instance.pause = false;
+                Player.Instance.Play();
+            }
+        }
     }
 
     public void Play()
@@ -39,13 +61,15 @@ public class Manager : MonoBehaviour
 
         StartCoroutine(HideMenu());
         StartCoroutine(DimLight());
-        
+
+        Game.Instance.Play();
+        Player.Instance.Play();
     }
 
     IEnumerator DimLight()
     {
         yield return new WaitForSeconds(1f);
-        for (float i = 1; i >= GameLightIntensity; i -= 0.01f)
+        for (float i = GameLight.intensity; i >= GameLightIntensity; i -= 0.01f)
         {
             GameLight.intensity = i;
             yield return null;

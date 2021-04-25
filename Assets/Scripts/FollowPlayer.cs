@@ -6,7 +6,7 @@ public class FollowPlayer : MonoBehaviour
 {
     public Transform player;
     public Vector3 offset = Vector3.zero;
-    public float offsetSpeed = 5f;
+    public float offsetSpeed = 3f;
     
     // Update is called once per frame
     void Update()

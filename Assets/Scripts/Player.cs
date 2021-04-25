@@ -5,8 +5,15 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class Player : MonoBehaviour
 {
+    private static Player _instance;
+    public static Player Instance { get { return _instance; }}
+
+    #region Variables
     private Vector3 mousePosition;
     private Animator animator;
+
+    private Rigidbody2D rb;
+    private AudioSource EngineSound;
 
     [Header("Rotation Speed")]
     public float normalRotationSpeed = 5f;
@@ -26,11 +33,30 @@ public class Player : MonoBehaviour
     public float pitchOffset = 0.05f;
     private Task pitchCoroutine;
     private bool breaking;
-    private Rigidbody2D rb;
-    private AudioSource EngineSound;
 
     public Light2D Fire;
+
+    [Header("Particle Settings")]
     public ParticleSystem Dust;
+    public float DustNormalSpeed = 1f;
+    public float DustBreakSpeed = 0.5f;
+    public ParticleSystem Thruster;
+    public float ThrusterNormalSpeed = 0.4f;
+    public float ThrusterBreakSpeed = 0.15f;
+
+    #endregion
+
+    private void Awake() {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,11 +69,27 @@ public class Player : MonoBehaviour
 
         EngineSound.pitch = initialEnginePitch;
         pitchCoroutine = null;
+
+        rb.velocity = Vector2.zero;
+    }
+
+
+    public void Play()
+    {
+        EngineSound.Play();
+    }
+
+    public void Pause()
+    {
+        EngineSound.Stop();
+        rb.velocity = Vector2.zero;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!Game.Instance.playing || Game.Instance.pause) return;
+
         // Figure out new position
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePosition - transform.position).normalized;
@@ -85,6 +127,11 @@ public class Player : MonoBehaviour
         Game.Instance.speed = Game.Instance.slowSpeed;
 
         pitchCoroutine = new Task(PitchEngine());
+
+        var pm = Thruster.main;
+        pm.startLifetime = ThrusterBreakSpeed;
+        pm = Dust.main;
+        pm.startLifetime = DustBreakSpeed;
     }
 
     public void Speed()
@@ -96,6 +143,11 @@ public class Player : MonoBehaviour
         Game.Instance.speed = Game.Instance.moveSpeed;
 
         pitchCoroutine = new Task(PitchEngine(false));
+
+        var pm = Thruster.main;
+        pm.startLifetime = ThrusterNormalSpeed;
+        pm = Dust.main;
+        pm.startLifetime = DustNormalSpeed;
     }
 
     public void CreateDust()
