@@ -12521,7 +12521,12 @@ MonoBehaviour:
   - {fileID: 7763862306468404186, guid: d1327fa0593fae247986f009b2c58f4f, type: 3}
   DirtTransition: []
   DirtBoss: []
-  RockTemplates: []
+  RockTemplates:
+  - {fileID: 8676853211799222775, guid: c4771a15f4e689c4b97e91b800769382, type: 3}
+  - {fileID: 8264025061792741985, guid: 11e57b89ebd6e754b99ff0e509b8d4b7, type: 3}
+  - {fileID: 2917967396196394278, guid: fdebaf9ca171a424784305de5aba7832, type: 3}
+  - {fileID: 3708862441887784572, guid: 180c612f18876614fb9970f1d56348b9, type: 3}
+  - {fileID: 4684831202974552007, guid: fe58539612b621842a68eaf4327af475, type: 3}
   RockTransition: []
   RockBoss: []
   LavaTemplates: []
