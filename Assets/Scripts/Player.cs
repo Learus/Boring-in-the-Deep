@@ -71,17 +71,27 @@ public class Player : MonoBehaviour
         pitchCoroutine = null;
 
         rb.velocity = Vector2.zero;
+
+        Dust.Stop();
+        Thruster.Stop();
     }
 
 
     public void Play()
     {
         EngineSound.Play();
+        Dust.Play();
+        Thruster.Play();
+        animator.SetBool("Playing", true);
     }
 
     public void Pause()
     {
         EngineSound.Stop();
+        Dust.Stop();
+        Thruster.Stop();
+        animator.SetBool("Playing", false);
+
         rb.velocity = Vector2.zero;
     }
 
@@ -105,8 +115,7 @@ public class Player : MonoBehaviour
         // Move the player
         rb.velocity = velocity;
 
-
-        CreateDust();
+        Dust.Play();
 
         if (Input.GetMouseButton(0))
         {
@@ -116,6 +125,8 @@ public class Player : MonoBehaviour
         {
             Speed();
         }
+
+        Debug.Log(breaking);
     }
 
     public void Break()
@@ -126,7 +137,10 @@ public class Player : MonoBehaviour
         rotationSpeed = slowRotationSpeed;
         Game.Instance.speed = Game.Instance.slowSpeed;
 
+        if (pitchCoroutine!= null && !breaking) pitchCoroutine.Stop();
+        
         pitchCoroutine = new Task(PitchEngine());
+        breaking = true;
 
         var pm = Thruster.main;
         pm.startLifetime = ThrusterBreakSpeed;
@@ -142,17 +156,15 @@ public class Player : MonoBehaviour
         rotationSpeed = normalRotationSpeed;
         Game.Instance.speed = Game.Instance.moveSpeed;
 
+        if (pitchCoroutine!= null && breaking) pitchCoroutine.Stop();
+        
         pitchCoroutine = new Task(PitchEngine(false));
+        breaking = false;
 
         var pm = Thruster.main;
         pm.startLifetime = ThrusterNormalSpeed;
         pm = Dust.main;
         pm.startLifetime = DustNormalSpeed;
-    }
-
-    public void CreateDust()
-    {
-        Dust.Play();
     }
 
     IEnumerator PitchEngine(bool down = true)
