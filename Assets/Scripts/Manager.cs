@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Manager : MonoBehaviour
     public Canvas Menu;
     public GameObject Beginning;
     public Vector3 BeginningInitialPosition = new Vector3(0, 14, 0);
+    public Image Fader;
+    public float pauseAlpha = 0.7f;
 
     private void Awake() {
         if (_instance != null && _instance != this)
@@ -32,6 +35,8 @@ public class Manager : MonoBehaviour
     {
         GameCamera.gameObject.SetActive(false);
         MenuCamera.gameObject.SetActive(true);
+        
+        StartCoroutine(FadeIn());
     }
 
     void Update()
@@ -42,12 +47,12 @@ public class Manager : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            if (!Game.Instance.pause)
+            if (Game.Instance.playing && !Game.Instance.pause)
             {
                 Game.Instance.pause = true;
                 Player.Instance.Pause();
             }
-            else
+            else if (Game.Instance.playing)
             {
                 Game.Instance.pause = false;
                 Player.Instance.Play();
@@ -60,6 +65,7 @@ public class Manager : MonoBehaviour
     {
         GameCamera.gameObject.SetActive(true);
         MenuCamera.gameObject.SetActive(false);
+        Beginning.SetActive(false);
 
         StartCoroutine(HideMenu());
         StartCoroutine(DimLight());
@@ -78,7 +84,6 @@ public class Manager : MonoBehaviour
         Player.Instance.Reset();
 
         Beginning.transform.position = BeginningInitialPosition;
-        GameLight.intensity = 1;
     }
 
     public void Lose()
@@ -108,5 +113,27 @@ public class Manager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         Reset();
+    }
+
+    IEnumerator FadeIn()
+    {
+        for (float i = 1; i >= 0; i -= 0.05f)
+        {
+            Color c = Fader.color;
+            c.a = i;
+            Fader.color = c;
+            yield return null;
+        }
+    }
+
+    IEnumerator FadeOut()
+    {
+        for (float i = 0; i <= 1; i += 0.05f)
+        {
+            Color c = Fader.color;
+            c.a = i;
+            Fader.color = c;
+            yield return null;
+        }
     }
 }

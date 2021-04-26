@@ -14,6 +14,8 @@ public class Game : MonoBehaviour
 
     public Vector3 InitialPosition = new Vector3(0, 0, -1);
 
+    public List<GameObject> InitialTemplates;
+
     [Header("Dirt")]
     public List<GameObject> DirtTemplates;
     [Header("Rock")]
@@ -43,7 +45,6 @@ public class Game : MonoBehaviour
     public bool pause = false;
 
     public bool winning = false;
-    public bool transitioning = false;
 
     #endregion
 
@@ -61,6 +62,7 @@ public class Game : MonoBehaviour
     void Start()
     {
         Templates = new List<List<GameObject>>();
+        Templates.Add(InitialTemplates);
         Templates.Add(DirtTemplates);
         Templates.Add(RockTemplates);
         Templates.Add(LavaTemplates);
@@ -68,16 +70,16 @@ public class Game : MonoBehaviour
         playing = false;
         pause = false;
         winning = false;
-        transitioning = false;
+
+        InitialGenerate();
     }
 
     void Update()
     {
-        if (!playing || pause) return;
+        if (pause) return;
 
         this.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
         Manager.Instance.Beginning.transform.Translate(new Vector3(0, 1, 0) * speed * Time.deltaTime);
-        Debug.Log(winning);
     }
 
     public void Play()
@@ -85,6 +87,8 @@ public class Game : MonoBehaviour
         playing = true;
 
         activeLayer = 0;
+
+        winning = true;
         currentGeneratedLevel = 0;
         playerIsInLevel = -1;
 
@@ -95,27 +99,32 @@ public class Game : MonoBehaviour
 
     public void Reset()
     {
+        activeLayer = 0;
+        this.transform.position = InitialPosition;
+
         playing = false;
         pause = false;
         winning = false;
-        transitioning = false;
-        ClearGame();
 
-        this.transform.position = InitialPosition;
+        currentGeneratedLevel = 0;
+        playerIsInLevel = -1;
+
+        ClearGame();
+        InitialGenerate();
+        speed = moveSpeed;
     }
 
     public void EnteredNewTemplate(TilemapTemplate template)
     {
         playerIsInLevel++;
 
-        if (playerIsInLevel > 2)
+        if (playerIsInLevel > 4)
         {
             Destroy(ActiveGame[0]);
             ActiveGame.RemoveAt(0);
-            Manager.Instance.Beginning.SetActive(false);
         }
 
-        if (currentGeneratedLevel >= levelsPerLayer)
+        if (playing && currentGeneratedLevel >= levelsPerLayer)
         {
             winning = true;
             currentGeneratedLevel = 0;
@@ -158,6 +167,7 @@ public class Game : MonoBehaviour
                 winning = false;
                 currentGeneratedLevel = 0;
                 TemplateList = Templates[activeLayer];
+                StartCoroutine(Player.Instance.TransitionColors(Player.Instance.LayerColors[activeLayer]));
             }
 
             if (winning)

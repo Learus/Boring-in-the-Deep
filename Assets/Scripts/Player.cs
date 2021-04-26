@@ -28,6 +28,10 @@ public class Player : MonoBehaviour
     public float slowSideSpeed = 5f;
     public float sideSpeed = 10f;
 
+    [Header("Lights")]
+    public Light2D FrontLight;
+    public List<Color> LayerColors;
+
     [Header("Break Stuff")]
     public Vector3 breakCameraOffset;
     public FollowPlayer followPLayerCamera;
@@ -76,8 +80,11 @@ public class Player : MonoBehaviour
 
         rb.velocity = Vector2.zero;
 
-        Dust.Stop();
-        Thruster.Stop();
+        Dust.Play();
+        Thruster.Play();
+        animator.SetBool("Playing", true);
+
+        FrontLight.color = LayerColors[0];
         this.transform.position = InitialPosition;
     }
 
@@ -89,10 +96,11 @@ public class Player : MonoBehaviour
         EngineSound.Stop();
         rb.velocity = Vector2.zero;
 
-        Dust.Stop();
-        Thruster.Stop();
+        // Dust.Stop();
+        // Thruster.Stop();
 
-        animator.SetBool("Playing", false);
+        // animator.SetBool("Playing", false);
+        StartCoroutine(TransitionColors(LayerColors[0]));
 
         this.transform.position = InitialPosition;
         this.transform.rotation = new Quaternion(0, 0, 0, 0);
@@ -120,7 +128,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!Game.Instance.playing || Game.Instance.pause) return;
+        if (Game.Instance.pause) return;
 
         // Figure out new position
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -133,6 +141,8 @@ public class Player : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(Vector3.forward, perpendicular);
        
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+
+
 
         // Move the player
         rb.velocity = velocity;
@@ -225,8 +235,18 @@ public class Player : MonoBehaviour
         Pause();
     }
 
+    public IEnumerator TransitionColors(Color color)
+    {
+        for (int i = 0; i < 1000; i++)
+        {
+            FrontLight.color = Color.Lerp(FrontLight.color, color, Time.deltaTime);
+            yield return null;
+        }
+
+        FrontLight.color = color;
+    }
     private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.name == "Obstacles")
+        if (Game.Instance.playing && other.gameObject.name == "Obstacles")
         {
             Manager.Instance.Lose();
         }
