@@ -55,8 +55,8 @@ Tilemap:
   - first: {x: 10, y: -6, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 3
-      m_TileSpriteIndex: 3
+      m_TileIndex: 11
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -1210,7 +1210,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 293744e5b30a546418ec355fd5c28521, type: 2}
   - m_RefCount: 15
     m_Data: {fileID: 11400000, guid: 60222f7ec44aafb4797347a8921bc084, type: 2}
-  - m_RefCount: 4
+  - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: 7cec534d3bbfdf44cb93750e0d026d8a, type: 2}
   - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: 5fd25105f315456438b0e718a33da01f, type: 2}
@@ -1226,7 +1226,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 9a343bb338fb7ed4997954f969735ee8, type: 2}
   - m_RefCount: 26
     m_Data: {fileID: 11400000, guid: a54e4766da2bd254fa534c69edda21a2, type: 2}
-  - m_RefCount: 17
+  - m_RefCount: 18
     m_Data: {fileID: 11400000, guid: d9748c8f56889e746a2351a9493f9f0e, type: 2}
   - m_RefCount: 17
     m_Data: {fileID: 11400000, guid: dc8ad909ce0aaa846a9e310258ab5284, type: 2}
@@ -1237,7 +1237,7 @@ Tilemap:
     m_Data: {fileID: 21300000, guid: fb77cad17d5ba684a9016ab4ffa1969e, type: 3}
   - m_RefCount: 15
     m_Data: {fileID: 21300000, guid: d1d7c6212a7f8a742815147e9a8398bf, type: 3}
-  - m_RefCount: 4
+  - m_RefCount: 3
     m_Data: {fileID: 21300000, guid: 21676656aa54ab84ea84f5fc9e357b47, type: 3}
   - m_RefCount: 3
     m_Data: {fileID: 21300000, guid: 66d0c12105258cd4c83e9ca426f79c74, type: 3}
@@ -1253,7 +1253,7 @@ Tilemap:
     m_Data: {fileID: 21300000, guid: 4f8750180c2762041add4c9f48a7c7f4, type: 3}
   - m_RefCount: 26
     m_Data: {fileID: 21300000, guid: 6c15bf2891a71ef4bad76870dfb8e4a2, type: 3}
-  - m_RefCount: 17
+  - m_RefCount: 18
     m_Data: {fileID: 21300000, guid: b617de8e349f1cb44a357c241c683d7a, type: 3}
   - m_RefCount: 17
     m_Data: {fileID: 21300000, guid: a540c5293fd0eb142a475307bc160ee1, type: 3}
@@ -1600,7 +1600,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3691424472248955575}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -20, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9092558866180112114}
@@ -1623,7 +1623,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PrevDependencies: 0400000007000000
   NextDependencies: 05000000
-  WinIndex: -1
+  WinIndex: 10
+  endGame: 0
   type: 0
 --- !u!61 &2992491469802196168
 BoxCollider2D:

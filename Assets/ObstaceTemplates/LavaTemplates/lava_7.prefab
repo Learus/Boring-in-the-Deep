@@ -1270,7 +1270,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4550531488963871984}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -80, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8229040400338290869}
@@ -1294,6 +1294,7 @@ MonoBehaviour:
   PrevDependencies: 0600000000000000
   NextDependencies: 0000000009000000
   WinIndex: 0
+  endGame: 0
   type: 0
 --- !u!61 &2709858124651346575
 BoxCollider2D:

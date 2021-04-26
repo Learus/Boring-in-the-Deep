@@ -18,6 +18,7 @@ public class Manager : MonoBehaviour
     public Vector3 BeginningInitialPosition = new Vector3(0, 14, 0);
     public Image Fader;
     public float pauseAlpha = 0.7f;
+    public bool resetting = false;
 
     private void Awake() {
         if (_instance != null && _instance != this)
@@ -34,25 +35,31 @@ public class Manager : MonoBehaviour
     void Start()
     {
         GameCamera.gameObject.SetActive(false);
+        GameCamera.m_Lens.OrthographicSize = 6.2f;
+        GameCamera.GetComponent<CinemachineCameraOffset>().m_Offset = new Vector3(0, 0, 0);
+
         MenuCamera.gameObject.SetActive(true);
         
         StartCoroutine(FadeIn());
+        resetting = false;
     }
 
     void Update()
     {
+        if (Game.Instance.cinematic) return;
+        
         if (Input.GetMouseButton(0))
         {
             if (!Game.Instance.playing) Play();
         }
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            if (Game.Instance.playing && !Game.Instance.pause)
+            if (Game.Instance.playing && !Game.Instance.pause && !resetting && !Game.Instance.cinematic)
             {
                 Game.Instance.pause = true;
                 Player.Instance.Pause();
             }
-            else if (Game.Instance.playing)
+            else if (Game.Instance.playing && Game.Instance.pause && !resetting && !Game.Instance.cinematic)
             {
                 Game.Instance.pause = false;
                 Player.Instance.Play();
@@ -76,12 +83,15 @@ public class Manager : MonoBehaviour
 
     public void Reset()
     {
+        resetting = false;
         GameCamera.gameObject.SetActive(false);
         MenuCamera.gameObject.SetActive(true);
         Beginning.SetActive(true);
         Menu.gameObject.SetActive(true);
         Game.Instance.Reset();
         Player.Instance.Reset();
+        GameCamera.m_Lens.OrthographicSize = 6.2f;
+        GameCamera.GetComponent<CinemachineCameraOffset>().m_Offset = new Vector3(0, 0, 0);
 
         Beginning.transform.position = BeginningInitialPosition;
     }
@@ -91,6 +101,11 @@ public class Manager : MonoBehaviour
         Player.Instance.Lose();
         Game.Instance.pause = true;
         StartCoroutine(WaitToReset());
+    }
+
+    public void EndGame()
+    {
+        this.GetComponent<Cinematic>().Begin();
     }
 
     IEnumerator DimLight()
@@ -111,6 +126,10 @@ public class Manager : MonoBehaviour
 
     IEnumerator WaitToReset()
     {
+        if (!resetting)
+            resetting = true;
+        else yield break;
+
         yield return new WaitForSeconds(3f);
         Reset();
     }

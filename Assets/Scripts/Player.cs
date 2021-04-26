@@ -10,10 +10,10 @@ public class Player : MonoBehaviour
 
     #region Variables
     private Vector3 mousePosition;
-    private Animator animator;
+    public Animator animator;
 
-    private Rigidbody2D rb;
-    private AudioSource EngineSound;
+    public Rigidbody2D rb;
+    public AudioSource EngineSound;
     public AudioSource CrashSound;
 
     public Vector3 InitialPosition = new Vector3(0, 13.85f, 1);
@@ -128,7 +128,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Game.Instance.pause) return;
+        if (Game.Instance.pause || Game.Instance.cinematic) return;
 
         // Figure out new position
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -141,8 +141,6 @@ public class Player : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(Vector3.forward, perpendicular);
        
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-
-
 
         // Move the player
         rb.velocity = velocity;
@@ -246,6 +244,7 @@ public class Player : MonoBehaviour
         FrontLight.color = color;
     }
     private void OnCollisionEnter2D(Collision2D other) {
+
         if (Game.Instance.playing && other.gameObject.name.Contains("Obstacles"))
         {
             Manager.Instance.Lose();

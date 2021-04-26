@@ -2400,8 +2400,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PrevDependencies: 0700000004000000
-  NextDependencies: 01000000020000000700000005000000
+  NextDependencies: 01000000020000000700000008000000
   WinIndex: 2
+  endGame: 0
   type: 0
 --- !u!61 &6197643202627039334
 BoxCollider2D:

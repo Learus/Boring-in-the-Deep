@@ -7,6 +7,7 @@ public class TilemapTemplate : MonoBehaviour
     public List<int> PrevDependencies;
     public List<int> NextDependencies;
     public int WinIndex;
+    public bool endGame;
     public enum TemplateType
     {
         Normal,
@@ -20,6 +21,11 @@ public class TilemapTemplate : MonoBehaviour
         if (other.name == "Player")
         {
             Game.Instance.EnteredNewTemplate(this);
+            if (endGame)
+            {
+                // Rumble
+            }
+            
         }
     }
 }

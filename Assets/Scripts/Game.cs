@@ -35,7 +35,7 @@ public class Game : MonoBehaviour
     public int ActiveTemplates = 5;
     public float templatesHeightDifference = 10f;
     public int activeLayer;
-    public int startLayer = 0;
+    public int startLayer = -1;
     public List<List<GameObject>> Templates;
 
     public int levelsPerLayer = 20;
@@ -46,6 +46,7 @@ public class Game : MonoBehaviour
     public bool pause = false;
 
     public bool winning = false;
+    public bool cinematic = false;
 
     #endregion
 
@@ -68,10 +69,12 @@ public class Game : MonoBehaviour
         Templates.Add(DirtTemplates);
         Templates.Add(RockTemplates);
         Templates.Add(LavaTemplates);
+        Templates.Add(VoidTemplates);
 
         playing = false;
         pause = false;
         winning = false;
+        cinematic = false;
 
         ClearGame();
         InitialGenerate();
@@ -89,7 +92,7 @@ public class Game : MonoBehaviour
     {
         playing = true;
 
-        activeLayer = startLayer;
+        activeLayer = 0;
 
         winning = true;
         currentGeneratedLevel = 0;
@@ -102,12 +105,13 @@ public class Game : MonoBehaviour
 
     public void Reset()
     {
-        activeLayer = startLayer;
+        activeLayer = 0;
         this.transform.position = InitialPosition;
 
         playing = false;
         pause = false;
         winning = false;
+        cinematic = false;
 
         currentGeneratedLevel = 0;
         playerIsInLevel = -1;
@@ -122,7 +126,7 @@ public class Game : MonoBehaviour
     {
         playerIsInLevel++;
 
-        if (playerIsInLevel > 4)
+        if (playerIsInLevel > 5)
         {
             Destroy(ActiveGame[0]);
             ActiveGame.RemoveAt(0);
@@ -132,7 +136,6 @@ public class Game : MonoBehaviour
         {
             winning = true;
             currentGeneratedLevel = 0;
-            return;
         }
         currentGeneratedLevel++;
 
@@ -165,7 +168,14 @@ public class Game : MonoBehaviour
             // THIS IS THE END
             if (winning && last.WinIndex == -1)
             {
-                activeLayer++;
+                // We're doing this to test specific layers
+                if (startLayer != -1)
+                {
+                    activeLayer = startLayer;
+                    startLayer = -1;
+                }
+                else activeLayer++;
+
                 winning = false;
                 currentGeneratedLevel = 0;
                 TemplateList = Templates[activeLayer];

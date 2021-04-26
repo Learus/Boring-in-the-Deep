@@ -2402,6 +2402,7 @@ MonoBehaviour:
   PrevDependencies: 02000000
   NextDependencies: 0000000009000000
   WinIndex: 9
+  endGame: 0
   type: 0
 --- !u!61 &6081728909651383399
 BoxCollider2D:
