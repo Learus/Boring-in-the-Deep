@@ -62,6 +62,7 @@ public class Game : MonoBehaviour
 
     void Start()
     {
+
         Templates = new List<List<GameObject>>();
         Templates.Add(InitialTemplates);
         Templates.Add(DirtTemplates);
@@ -72,6 +73,7 @@ public class Game : MonoBehaviour
         pause = false;
         winning = false;
 
+        ClearGame();
         InitialGenerate();
     }
 
@@ -109,7 +111,8 @@ public class Game : MonoBehaviour
 
         currentGeneratedLevel = 0;
         playerIsInLevel = -1;
-
+        
+        ActiveGame = new List<GameObject>();
         ClearGame();
         InitialGenerate();
         speed = moveSpeed;
@@ -138,8 +141,6 @@ public class Game : MonoBehaviour
 
     public void InitialGenerate()
     {
-        ActiveGame = new List<GameObject>();
-
         for (int i = 0; i < ActiveTemplates; i++)
         {
             Generate(i);
@@ -205,5 +206,7 @@ public class Game : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+        ActiveGame.Clear();
     }
 }

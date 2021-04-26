@@ -246,7 +246,7 @@ public class Player : MonoBehaviour
         FrontLight.color = color;
     }
     private void OnCollisionEnter2D(Collision2D other) {
-        if (Game.Instance.playing && other.gameObject.name == "Obstacles")
+        if (Game.Instance.playing && other.gameObject.name.Contains("Obstacles"))
         {
             Manager.Instance.Lose();
         }
