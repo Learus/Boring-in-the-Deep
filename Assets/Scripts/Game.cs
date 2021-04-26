@@ -35,6 +35,7 @@ public class Game : MonoBehaviour
     public int ActiveTemplates = 5;
     public float templatesHeightDifference = 10f;
     public int activeLayer;
+    public int startLayer = 0;
     public List<List<GameObject>> Templates;
 
     public int levelsPerLayer = 20;
@@ -86,7 +87,7 @@ public class Game : MonoBehaviour
     {
         playing = true;
 
-        activeLayer = 0;
+        activeLayer = startLayer;
 
         winning = true;
         currentGeneratedLevel = 0;
@@ -99,7 +100,7 @@ public class Game : MonoBehaviour
 
     public void Reset()
     {
-        activeLayer = 0;
+        activeLayer = startLayer;
         this.transform.position = InitialPosition;
 
         playing = false;
