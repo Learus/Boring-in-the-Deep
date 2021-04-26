@@ -124,6 +124,12 @@ public class Game : MonoBehaviour
 
     public void EnteredNewTemplate(TilemapTemplate template)
     {
+        if (template.type == TilemapTemplate.TemplateType.Transition)
+        {
+            StartCoroutine(Player.Instance.TransitionColors(Player.Instance.LayerColors[activeLayer]));
+            StartCoroutine(Manager.Instance.ChangeMusic(Manager.Instance.LayerClips[activeLayer]));
+        }
+
         playerIsInLevel++;
 
         if (playerIsInLevel > 5)
@@ -179,7 +185,6 @@ public class Game : MonoBehaviour
                 winning = false;
                 currentGeneratedLevel = 0;
                 TemplateList = Templates[activeLayer];
-                StartCoroutine(Player.Instance.TransitionColors(Player.Instance.LayerColors[activeLayer]));
             }
 
             if (winning)

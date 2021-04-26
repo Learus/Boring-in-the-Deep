@@ -20,6 +20,9 @@ public class Manager : MonoBehaviour
     public float pauseAlpha = 0.7f;
     public bool resetting = false;
 
+    public List<AudioClip> LayerClips;
+    public AudioSource music;
+
     private void Awake() {
         if (_instance != null && _instance != this)
         {
@@ -41,6 +44,11 @@ public class Manager : MonoBehaviour
         MenuCamera.gameObject.SetActive(true);
         
         StartCoroutine(FadeIn());
+
+        music = this.GetComponent<AudioSource>();
+        music.clip = LayerClips[1];
+        music.Play();
+
         resetting = false;
     }
 
@@ -92,6 +100,10 @@ public class Manager : MonoBehaviour
         Player.Instance.Reset();
         GameCamera.m_Lens.OrthographicSize = 6.2f;
         GameCamera.GetComponent<CinemachineCameraOffset>().m_Offset = new Vector3(0, 0, 0);
+
+        music.Stop();
+        music.clip = LayerClips[1];
+        music.Play();
 
         Beginning.transform.position = BeginningInitialPosition;
     }
@@ -152,6 +164,29 @@ public class Manager : MonoBehaviour
             Color c = Fader.color;
             c.a = i;
             Fader.color = c;
+            yield return null;
+        }
+    }
+
+    public IEnumerator ChangeMusic(AudioClip next)
+    {
+        if (next == null) yield break;
+
+        AudioSource Music = this.GetComponent<AudioSource>();
+        for (float i = 1; i >= 0; i -= 0.05f)
+        {
+            Music.volume = i;
+            yield return null;
+        }
+
+        Music.Stop();
+        Music.clip = next;
+        yield return new WaitForSeconds(1);
+        Music.Play();
+
+        for (float i = 0; i <= 1; i += 0.01f)
+        {
+            Music.volume = i;
             yield return null;
         }
     }

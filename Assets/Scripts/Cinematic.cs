@@ -20,6 +20,7 @@ public class Cinematic : MonoBehaviour
 
     Sync sync;
     public AudioSource Music;
+    public AudioClip BoringInTheDeepEndMusic;
     public AudioSource Boom;
 
     public Image Fader;
@@ -75,6 +76,12 @@ public class Cinematic : MonoBehaviour
         Player.Instance.rb.velocity = Vector2.zero;
         Player.Instance.transform.position = new Vector3(0, Player.Instance.transform.position.y, Player.Instance.transform.position.z);
         Player.Instance.transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        Music.Stop();
+        Music.clip = BoringInTheDeepEndMusic;
+        Music.volume = 1;
+        Music.loop = false;
+        Music.Play();
 
         List<Sync.SyncTuple> actions = new List<Sync.SyncTuple>();
 
@@ -141,7 +148,7 @@ public class Cinematic : MonoBehaviour
             // Play Boom sound
             Boom.Play();
         }));
-        actions.Add(new Sync.SyncTuple(88, () => {
+        actions.Add(new Sync.SyncTuple(90, () => {
             Application.Quit();
         }));
 

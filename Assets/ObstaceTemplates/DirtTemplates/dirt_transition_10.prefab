@@ -49,7 +49,8 @@ MonoBehaviour:
   PrevDependencies: 0100000008000000
   NextDependencies: 00000000
   WinIndex: -1
-  type: 0
+  endGame: 0
+  type: 1
 --- !u!61 &4213474787366705561
 BoxCollider2D:
   m_ObjectHideFlags: 0
