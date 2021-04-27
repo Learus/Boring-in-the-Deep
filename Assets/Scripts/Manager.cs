@@ -64,16 +64,26 @@ public class Manager : MonoBehaviour
         {
             if (Game.Instance.playing && !Game.Instance.pause && !resetting && !Game.Instance.cinematic)
             {
+                Fader.gameObject.SetActive(true);
+                Color c = Fader.color;
+                c.a = .5f;
+                Fader.color = c;
+
                 Game.Instance.pause = true;
                 Player.Instance.Pause();
             }
             else if (Game.Instance.playing && Game.Instance.pause && !resetting && !Game.Instance.cinematic)
             {
+                Fader.gameObject.SetActive(false);
+                Color c = Fader.color;
+                c.a = 0f;
+                Fader.color = c;
+
                 Game.Instance.pause = false;
                 Player.Instance.Play();
             }
         }
-        if (Input.GetKeyUp(KeyCode.Space)) Reset();
+        // if (Input.GetKeyUp(KeyCode.Space)) Reset();
     }
 
     public void Play()
