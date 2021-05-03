@@ -74,8 +74,7 @@ public class Cinematic : MonoBehaviour
         god.transform.position = new Vector3(god.transform.position.x, initialGodY, god.transform.position.z);
 
         Player.Instance.rb.velocity = Vector2.zero;
-        Player.Instance.transform.position = new Vector3(0, Player.Instance.transform.position.y, Player.Instance.transform.position.z);
-        Player.Instance.transform.rotation = Quaternion.Euler(0, 0, 0);
+        StartCoroutine(MovePlayer());
 
         Music.Stop();
         Music.clip = BoringInTheDeepEndMusic;
@@ -148,7 +147,7 @@ public class Cinematic : MonoBehaviour
             // Play Boom sound
             Boom.Play();
         }));
-        actions.Add(new Sync.SyncTuple(90, () => {
+        actions.Add(new Sync.SyncTuple(95, () => {
             Application.Quit();
         }));
 
@@ -158,6 +157,22 @@ public class Cinematic : MonoBehaviour
 
         Music.Play();
         StartCoroutine(Synchronizer());
+    }
+
+    IEnumerator MovePlayer()
+    {
+        for (float i = 0f; i <= 1f; i += 0.02f)
+        {
+            Vector3 targetPosition = new Vector3(0, Player.Instance.transform.position.y, Player.Instance.transform.position.z);
+            Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
+
+            Player.Instance.transform.position = Vector3.Lerp(Player.Instance.transform.position, targetPosition, i);
+            Player.Instance.transform.rotation = Quaternion.Lerp(Player.Instance.transform.rotation, targetRotation, i);
+            yield return null;
+        }
+
+        Player.Instance.transform.position = new Vector3(0, Player.Instance.transform.position.y, Player.Instance.transform.position.z);
+        Player.Instance.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     IEnumerator MoveGod(float start, float end, float duration)

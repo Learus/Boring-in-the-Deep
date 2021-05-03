@@ -22,6 +22,11 @@ public class Manager : MonoBehaviour
 
     public List<AudioClip> LayerClips;
     public AudioSource music;
+    public float initialMusicPitch = 1f;
+    public float breakMusicPitch = 0.7f;
+    public float breakMusicPitchOffset = 0.1f;
+
+    public GameObject PauseMenu;
 
     private void Awake() {
         if (_instance != null && _instance != this)
@@ -37,6 +42,7 @@ public class Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PauseMenu.SetActive(false);
         GameCamera.gameObject.SetActive(false);
         GameCamera.m_Lens.OrthographicSize = 6.2f;
         GameCamera.GetComponent<CinemachineCameraOffset>().m_Offset = new Vector3(0, 0, 0);
@@ -56,7 +62,7 @@ public class Manager : MonoBehaviour
     {
         if (Game.Instance.cinematic) return;
         
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonUp(0))
         {
             if (!Game.Instance.playing) Play();
         }
@@ -64,6 +70,7 @@ public class Manager : MonoBehaviour
         {
             if (Game.Instance.playing && !Game.Instance.pause && !resetting && !Game.Instance.cinematic)
             {
+                PauseMenu.SetActive(true);
                 Fader.gameObject.SetActive(true);
                 Color c = Fader.color;
                 c.a = .5f;
@@ -71,9 +78,11 @@ public class Manager : MonoBehaviour
 
                 Game.Instance.pause = true;
                 Player.Instance.Pause();
+
             }
             else if (Game.Instance.playing && Game.Instance.pause && !resetting && !Game.Instance.cinematic)
             {
+                PauseMenu.SetActive(false);
                 Fader.gameObject.SetActive(false);
                 Color c = Fader.color;
                 c.a = 0f;
@@ -123,6 +132,11 @@ public class Manager : MonoBehaviour
         Player.Instance.Lose();
         Game.Instance.pause = true;
         StartCoroutine(WaitToReset());
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     public void EndGame()
@@ -178,25 +192,46 @@ public class Manager : MonoBehaviour
         }
     }
 
+    public IEnumerator PitchMusic(bool down = true)
+    {
+        if (down)
+        {
+            for (float i = music.pitch; i >= breakMusicPitch; i -= breakMusicPitchOffset)
+            {
+                music.pitch = i;
+                yield return null;
+            }
+            music.pitch = breakMusicPitch;
+        }
+        else
+        {
+            for (float i = music.pitch; i <= initialMusicPitch; i += breakMusicPitchOffset)
+            {
+                music.pitch = i;
+                yield return null;
+            }
+            music.pitch = initialMusicPitch;
+        }
+    }
+
     public IEnumerator ChangeMusic(AudioClip next)
     {
         if (next == null) yield break;
 
-        AudioSource Music = this.GetComponent<AudioSource>();
         for (float i = 1; i >= 0; i -= 0.05f)
         {
-            Music.volume = i;
+            music.volume = i;
             yield return null;
         }
 
-        Music.Stop();
-        Music.clip = next;
+        music.Stop();
+        music.clip = next;
         yield return new WaitForSeconds(1);
-        Music.Play();
+        music.Play();
 
         for (float i = 0; i <= 1; i += 0.01f)
         {
-            Music.volume = i;
+            music.volume = i;
             yield return null;
         }
     }

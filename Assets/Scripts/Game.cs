@@ -124,15 +124,15 @@ public class Game : MonoBehaviour
 
     public void EnteredNewTemplate(TilemapTemplate template)
     {
-        if (template.type == TilemapTemplate.TemplateType.Transition)
+        if (template.type == TilemapTemplate.TemplateType.Transition && activeLayer != 0)
         {
-            StartCoroutine(Player.Instance.TransitionColors(Player.Instance.LayerColors[activeLayer]));
-            StartCoroutine(Manager.Instance.ChangeMusic(Manager.Instance.LayerClips[activeLayer]));
+            StartCoroutine(Player.Instance.TransitionColors(Player.Instance.LayerColors[activeLayer + 1]));
+            StartCoroutine(Manager.Instance.ChangeMusic(Manager.Instance.LayerClips[activeLayer + 1]));
         }
 
         playerIsInLevel++;
 
-        if (playerIsInLevel > 5)
+        if (playerIsInLevel > 2)
         {
             Destroy(ActiveGame[0]);
             ActiveGame.RemoveAt(0);
@@ -145,19 +145,24 @@ public class Game : MonoBehaviour
         }
         currentGeneratedLevel++;
 
-        Generate(ActiveGame.Count);
+        Generate();
+        if (activeLayer == 4 && !winning)
+        {
+            Generate();
+            Generate();
+        }
     }
 
     public void InitialGenerate()
     {
         for (int i = 0; i < ActiveTemplates; i++)
         {
-            Generate(i);
+            Generate();
             currentGeneratedLevel++;
         }
     }
 
-    public void Generate(int index = 0)
+    public void Generate()
     {
         List<GameObject> TemplateList = Templates[activeLayer];
 

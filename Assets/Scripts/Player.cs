@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     public float breakEnginePitch = 0.6f;
     public float pitchOffset = 0.05f;
     private Task pitchCoroutine;
+    private Task musicPitchCoroutine;
     private bool breaking;
 
     public Light2D Fire;
@@ -77,6 +78,7 @@ public class Player : MonoBehaviour
 
         EngineSound.pitch = initialEnginePitch;
         pitchCoroutine = null;
+        musicPitchCoroutine = null;
 
         rb.velocity = Vector2.zero;
 
@@ -149,11 +151,13 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            Break();
+            if (Game.Instance.playing)
+                Break();
         }
         else
         {
-            Speed();
+            if (Game.Instance.playing)
+                Speed();
         }
     }
 
@@ -165,9 +169,11 @@ public class Player : MonoBehaviour
         rotationSpeed = slowRotationSpeed;
         Game.Instance.speed = Game.Instance.slowSpeed;
 
-        if (pitchCoroutine!= null && !breaking) pitchCoroutine.Stop();
+        if (pitchCoroutine != null && !breaking) pitchCoroutine.Stop();
+        if (musicPitchCoroutine != null && !breaking) musicPitchCoroutine.Stop();
         
         pitchCoroutine = new Task(PitchEngine());
+        musicPitchCoroutine = new Task(Manager.Instance.PitchMusic());
         breaking = true;
 
         var pm = Thruster.main;
@@ -184,9 +190,11 @@ public class Player : MonoBehaviour
         rotationSpeed = normalRotationSpeed;
         Game.Instance.speed = Game.Instance.moveSpeed;
 
-        if (pitchCoroutine!= null && breaking) pitchCoroutine.Stop();
+        if (pitchCoroutine != null && breaking) pitchCoroutine.Stop();
+        if (musicPitchCoroutine != null && breaking) musicPitchCoroutine.Stop();
         
         pitchCoroutine = new Task(PitchEngine(false));
+        musicPitchCoroutine = new Task(Manager.Instance.PitchMusic(false));
         breaking = false;
 
         var pm = Thruster.main;
